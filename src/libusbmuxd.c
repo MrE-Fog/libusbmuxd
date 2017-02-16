@@ -879,7 +879,6 @@ retry:
 		DEBUG(1, "%s: error opening socket!\n", __func__);
 		return sfd;
 	}
-
 	tag = ++use_tag;
 	if ((proto_version == 1) && (try_list_devices)) {
 		if (send_list_devices_packet(sfd, tag) > 0) {
@@ -902,7 +901,8 @@ retry:
 							plist_free(list);
 							return -1;
 						}
-						collection_add(&tmpdevs, devinfo);
+						if (devinfo->product_id != 0) // Ignore Wi Fi Sync devices - this causes lots of trouble
+							collection_add(&tmpdevs, devinfo);
 					}
 					plist_free(list);
 					goto got_device_list;
